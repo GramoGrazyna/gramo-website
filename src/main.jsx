@@ -3,12 +3,12 @@ import { createRoot } from "react-dom/client";
 import "./styles.css";
 
 const products = [
-  ["01", "OMNIedge™", "Monitoring predykcyjny dla prowadnic THK i inteligentnej diagnostyki maszyn."],
-  ["02", "Prowadnice liniowe", "THK / NB — prowadzenie osi dla automatyki, CNC i maszyn specjalnych."],
-  ["03", "Śruby kulowe", "Precyzyjny ruch osi dla CNC, automatyki, robotyki i maszyn specjalnych."],
-  ["04", "Stoły precyzyjne", "THK / NB — rozwiązania do dokładnego pozycjonowania i mikroruchów."],
-  ["05", "Slide Way – prowadnice wałeczkowo-krzyżowe", "Nippon Bearing — precyzyjne prowadzenie dla wymagających mechanizmów."],
-  ["06", "Tuleje liniowe", "NB — kompaktowe rozwiązania prowadzenia dla aplikacji przemysłowych."]
+  { number: "01", title: "OMNIedge™", description: "Monitoring predykcyjny dla prowadnic THK i inteligentnej diagnostyki maszyn.", image: "/omniedge.jpg", alt: "THK OMNIedge – monitoring predykcyjny" },
+  { number: "02", title: "Prowadnice liniowe", description: "THK / NB — prowadzenie osi dla automatyki, CNC i maszyn specjalnych.", image: "/linear-guide.jpg", alt: "THK i NB – prowadnica liniowa" },
+  { number: "03", title: "Śruby kulowe", description: "Precyzyjny ruch osi dla CNC, automatyki, robotyki i maszyn specjalnych.", image: "/ball-screw.jpg", alt: "Śruba kulowa do napędu osi" },
+  { number: "04", title: "Stoły precyzyjne", description: "THK / NB — rozwiązania do dokładnego pozycjonowania i mikroruchów.", image: "/precision-table.jpg", alt: "THK i NB – stół precyzyjny" },
+  { number: "05", title: "Slide Way – prowadnice wałeczkowo-krzyżowe", description: "Nippon Bearing — precyzyjne prowadzenie dla wymagających mechanizmów.", image: "/slide-way.jpg", alt: "NB Slide Way – prowadnice wałeczkowo-krzyżowe" },
+  { number: "06", title: "Tuleje liniowe", description: "NB — kompaktowe rozwiązania prowadzenia dla aplikacji przemysłowych.", image: "/linear-bushing.jpg", alt: "Nippon Bearing – tuleja liniowa" }
 ];
 
 const applications = [
@@ -223,18 +223,17 @@ function App() {
             </div>
 
             <div className="products">
-              {products.map(([number, title, description]) => (
-                <article className="card" key={title}>
-                  <div className="num">{number}</div>
-                  {number === "05" && (
-                    <img
-                      className="product-photo"
-                      src="/slide-way.jpg"
-                      alt="NB Slide Way – prowadnice wałeczkowo-krzyżowe"
-                    />
-                  )}
-                  <h3>{title}</h3>
-                  <p>{description}</p>
+              {products.map((product) => (
+                <article className="card" key={product.title}>
+                  <div className="num">{product.number}</div>
+                  <img
+                    className="product-photo"
+                    src={product.image}
+                    alt={product.alt}
+                    loading="lazy"
+                  />
+                  <h3>{product.title}</h3>
+                  <p>{product.description}</p>
                   <button className="text-link" onClick={openQuote}>Zapytaj o ofertę →</button>
                 </article>
               ))}
