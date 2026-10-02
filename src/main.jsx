@@ -3,130 +3,113 @@ import { createRoot } from "react-dom/client";
 import "./styles.css";
 
 const products = [
-  ["01", "OMNIedge™", "Monitoring predykcyjny dla prowadnic THK i inteligentnej diagnostyki maszyn."],
-  ["02", "Prowadnice liniowe", "THK / NB — prowadzenie osi dla automatyki, CNC i maszyn specjalnych."],
-  ["03", "Śruby kulowe", "Precyzyjny ruch osi dla CNC, automatyki, robotyki i maszyn specjalnych."],
-  ["04", "Stoły precyzyjne", "THK / NB — rozwiązania do dokładnego pozycjonowania i mikroruchów."],
-  ["05", "Slide Way – prowadnice wałeczkowo-krzyżowe", "Nippon Bearing — precyzyjne prowadzenie dla wymagających mechanizmów."],
-  ["06", "Tuleje liniowe", "NB — kompaktowe rozwiązania prowadzenia dla aplikacji przemysłowych."]
+  {
+    no: "01",
+    name: "OMNIedge™",
+    brand: "THK",
+    desc: "Monitoring predykcyjny prowadnic, śrub kulowych i elementów ruchu.",
+    image: "/hero.png",
+    className: "omni",
+  },
+  {
+    no: "02",
+    name: "Prowadnice liniowe",
+    brand: "THK HSR",
+    desc: "Precyzyjny ruch liniowy dla maszyn CNC, automatyki i robotyki.",
+    image: "https://www.thk.com/eu/assets/images/products/full_ball_hsr.png",
+  },
+  {
+    no: "03",
+    name: "Śruby kulowe",
+    brand: "THK",
+    desc: "Precyzyjne napędy osi dla CNC, automatyki i maszyn specjalnych.",
+    image: "https://www.thk.com/in/assets/images/products/ISO_3408_Compliant.png",
+  },
+  {
+    no: "04",
+    name: "Stoły precyzyjne",
+    brand: "THK VRU / VRT",
+    desc: "Kompaktowe pozycjonowanie o wysokiej dokładności i sztywności.",
+    image: "https://www.thk.com/eu/assets/images/products/cross_roller_table_vru.png",
+  },
+  {
+    no: "05",
+    name: "Slide Way",
+    brand: "Nippon Bearing",
+    desc: "Prowadnice krzyżowo-wałeczkowe do optyki, pomiarów i precyzyjnej mechaniki.",
+    image: "https://www.nipponbearing.com/assets/images/products/slideway/slideway.jpg",
+  },
+  {
+    no: "06",
+    name: "Tuleje liniowe",
+    brand: "NB Slide Bush",
+    desc: "Niskotarciowe prowadzenie na wałku dla automatyki i maszyn przemysłowych.",
+    image: "https://www.nipponbearing.com/assets/images/home/products_slidebush.jpg",
+  },
 ];
 
 const applications = [
-  ["Automatyka", "Robotyka, osie liniowe i systemy pozycjonowania."],
-  ["Maszyny CNC", "Prowadzenie osi i śruby kulowe."],
-  ["Fotonika i optyka", "Precyzyjne pozycjonowanie elementów optycznych."],
-  ["Medical & Laboratory", "Mechanizmy precyzyjne i aparatura laboratoryjna."],
-  ["Semiconductor", "Cleanroom, wysoka powtarzalność i precyzja."],
-  ["Urządzenia pomiarowe", "Ruch o wysokiej dokładności i stabilności."],
+  ["Automatyka i robotyka", "Osie liniowe, moduły pozycjonowania i układy ruchu."],
+  ["Maszyny CNC", "Prowadnice liniowe, śruby kulowe i modernizacja osi."],
+  ["Fotonika i optyka", "Mikropozycjonowanie, stoły precyzyjne i Slide Way."],
+  ["Medycyna i laboratoria", "Precyzyjne mechanizmy i aparatura badawcza."],
+  ["Semiconductor / Cleanroom", "Precyzja, powtarzalność i rozwiązania do wymagających środowisk."],
+  ["Urządzenia pomiarowe", "Stabilny ruch, małe tarcie i wysoka dokładność."],
   ["Aerospace", "Precyzyjne mechanizmy i stanowiska testowe."],
-  ["R&D / Deep Tech", "Mikrorobotyka, fotonika i nanopozycjonowanie."]
+  ["R&D / Deep Tech", "Mikrorobotyka, fotonika i nanopozycjonowanie."],
 ];
 
 function QuoteModal({ onClose }) {
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({
-    company: "",
-    name: "",
-    email: "",
-    phone: "",
-    product: "",
-    quantity: "",
-    message: ""
-  });
 
-  const update = (key) => (event) =>
-    setForm((current) => ({ ...current, [key]: event.target.value }));
+  const submit = (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const subject = `Zapytanie ofertowe GRAMO – ${data.get("product") || "produkt"}`;
+    const body = [
+      `Firma: ${data.get("company") || ""}`,
+      `Imię i nazwisko: ${data.get("name") || ""}`,
+      `E-mail: ${data.get("email") || ""}`,
+      `Telefon: ${data.get("phone") || ""}`,
+      `Produkt / model: ${data.get("product") || ""}`,
+      `Ilość: ${data.get("qty") || ""}`,
+      "",
+      "Opis zapytania:",
+      data.get("message") || "",
+    ].join("\n");
 
-  const submit = (event) => {
-    event.preventDefault();
-
-    const subject = encodeURIComponent(
-      `Zapytanie ofertowe GRAMO${form.product ? ` – ${form.product}` : ""}`
-    );
-
-    const body = encodeURIComponent(
-      [
-        `Firma: ${form.company}`,
-        `Osoba: ${form.name}`,
-        `E-mail: ${form.email}`,
-        `Telefon: ${form.phone}`,
-        `Produkt / model: ${form.product}`,
-        `Ilość: ${form.quantity}`,
-        "",
-        "Wiadomość:",
-        form.message
-      ].join("\n")
-    );
-
-    window.location.href = `mailto:biuro@gramo.com.pl?subject=${subject}&body=${body}`;
+    window.location.href =
+      `mailto:biuro@gramo.com.pl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
 
   return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
+    <div className="modal-overlay" onMouseDown={onClose}>
       <div className="quote-modal" onMouseDown={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="Zamknij">×</button>
+        <button className="modal-close" onClick={onClose}>×</button>
+        <div className="eyebrow blue">B2B / ENGINEERING</div>
+        <h2>Zapytaj o ofertę</h2>
+        <p>Podaj model, ilość lub parametry aplikacji. Możesz również opisać problem albo przesłać rysunek w kolejnym kontakcie.</p>
 
-        {!sent ? (
-          <>
-            <div className="kicker">B2B / Engineering</div>
-            <h2>Zapytaj o ofertę</h2>
-            <p className="modal-intro">
-              Podaj podstawowe informacje. Możesz wpisać symbol produktu,
-              parametry aplikacji albo opisać potrzebę.
-            </p>
-
-            <form onSubmit={submit}>
-              <div className="quote-grid">
-                <label>Firma*
-                  <input required value={form.company} onChange={update("company")} />
-                </label>
-                <label>Imię i nazwisko*
-                  <input required value={form.name} onChange={update("name")} />
-                </label>
-                <label>E-mail*
-                  <input required type="email" value={form.email} onChange={update("email")} />
-                </label>
-                <label>Telefon
-                  <input value={form.phone} onChange={update("phone")} />
-                </label>
-                <label>Produkt / model
-                  <input placeholder="np. THK HSR20" value={form.product} onChange={update("product")} />
-                </label>
-                <label>Ilość
-                  <input value={form.quantity} onChange={update("quantity")} />
-                </label>
-              </div>
-
-              <label>Opis aplikacji / zapytania
-                <textarea
-                  rows="5"
-                  placeholder="Parametry, wymiary, obciążenie, prędkość, ilość sztuk lub inne informacje..."
-                  value={form.message}
-                  onChange={update("message")}
-                />
-              </label>
-
-              <div className="quote-actions">
-                <button className="btn primary" type="submit">Wyślij zapytanie →</button>
-                <button className="btn modal-secondary" type="button" onClick={onClose}>Anuluj</button>
-              </div>
-              <div className="privacy-note">
-                Po wysłaniu zostanie otwarta wiadomość e-mail do GRAMO z uzupełnionymi danymi.
-              </div>
-            </form>
-          </>
-        ) : (
-          <div className="success-state">
-            <div className="success-icon">✓</div>
-            <div className="kicker">Zapytanie przygotowane</div>
-            <h2>Dziękujemy.</h2>
-            <p>
-              Otworzyliśmy wiadomość e-mail z przygotowaną treścią zapytania.
-              Wystarczy ją wysłać.
-            </p>
+        {sent ? (
+          <div className="success-box">
+            <strong>Gotowe.</strong>
+            <span>Otworzyliśmy przygotowaną wiadomość e-mail do GRAMO.</span>
             <button className="btn primary" onClick={onClose}>Zamknij</button>
           </div>
+        ) : (
+          <form onSubmit={submit}>
+            <div className="form-grid">
+              <input name="company" placeholder="Firma" />
+              <input name="name" placeholder="Imię i nazwisko" required />
+              <input name="email" type="email" placeholder="E-mail" required />
+              <input name="phone" placeholder="Telefon" />
+              <input name="product" placeholder="Produkt / model" />
+              <input name="qty" placeholder="Ilość" />
+            </div>
+            <textarea name="message" placeholder="Opis aplikacji / zapytania" rows="5" />
+            <button className="btn primary form-submit" type="submit">Przygotuj zapytanie →</button>
+          </form>
         )}
       </div>
     </div>
@@ -136,261 +119,225 @@ function QuoteModal({ onClose }) {
 function App() {
   const [quoteOpen, setQuoteOpen] = useState(false);
 
-  const openQuote = (event) => {
-    event.preventDefault();
-    setQuoteOpen(true);
-  };
-
   return (
-    <>
+    <div className="site">
       <header className="hero" id="top">
         <img className="hero-img" src="/hero.png" alt="" />
         <div className="hero-overlay" />
 
-        <nav className="nav container">
-          <a className="brand" href="#top">
-            GRAMO
-            <small>MOTION FOR A BETTER TOMORROW</small>
-          </a>
+        <nav className="navbar">
+          <div className="nav-inner">
+            <a className="logo" href="#top">
+              GRAMO
+              <small>MOTION FOR A BETTER TOMORROW</small>
+            </a>
 
-          <div className="links">
-            <a href="#produkty">Produkty</a>
-            <a href="#thk">THK</a>
-            <a href="#nb">Nippon Bearing</a>
-            <a href="#rozwiazania">Rozwiązania</a>
-            <a href="#aplikacje">Aplikacje</a>
-            <a href="#kontakt">Kontakt</a>
-          </div>
+            <div className="nav-links">
+              <a href="#produkty">Produkty</a>
+              <a href="#thk">THK</a>
+              <a href="#nb">Nippon Bearing</a>
+              <a href="#rozwiazania">Rozwiązania</a>
+              <a href="#aplikacje">Aplikacje</a>
+              <a href="#wsparcie">Wsparcie</a>
+              <a href="#kontakt">Kontakt</a>
+            </div>
 
-          <button className="btn primary nav-cta" onClick={openQuote}>
-            Zapytaj o ofertę →
-          </button>
-        </nav>
-
-        <div className="container hero-content">
-          <div className="eyebrow">Precision Motion Technology</div>
-          <h1>
-            Technologia,
-            <br />
-            która napędza <span>przyszłość</span>
-          </h1>
-          <p>
-            THK i Nippon Bearing — precyzyjny ruch dla nowoczesnych maszyn,
-            automatyki i aplikacji high-tech.
-          </p>
-
-          <div className="actions">
-            <button className="btn primary" onClick={openQuote}>
+            <button className="btn primary nav-cta" onClick={() => setQuoteOpen(true)}>
               Zapytaj o ofertę →
             </button>
           </div>
+        </nav>
 
-          <div className="brands">
-            <span>THK</span>
-            <span>NB</span>
+        <div className="hero-content container">
+          <div className="eyebrow">PRECISION MOTION TECHNOLOGY</div>
+          <h1>
+            Technologia,<br />
+            która napędza <span>przyszłość</span>
+          </h1>
+          <p>
+            THK i Nippon Bearing – precyzyjny ruch dla nowoczesnych maszyn,
+            automatyki i aplikacji high-tech.
+          </p>
+
+          <button className="btn primary hero-cta" onClick={() => setQuoteOpen(true)}>
+            Zapytaj o ofertę →
+          </button>
+
+          <div className="brand-lockup">
+            <strong>THK</strong>
+            <i />
+            <strong>NB</strong>
           </div>
+        </div>
+
+        <div className="hero-badge">
+          <b>OMNIedge™</b>
+          <span>MONITORING PREDYKCYJNY</span>
+          <div className="wave">∿∿∿∿∿∿</div>
+          <small>VIBRATION <em>OK</em></small>
+          <small>TEMPERATURE <em>OK</em></small>
+          <small>LUBRICATION <em>OK</em></small>
+          <small>LOAD <em>OK</em></small>
+          <small>STATUS <em>ONLINE</em></small>
         </div>
       </header>
 
-      <section className="strip" aria-label="Wartości">
-        <div className="container strip-grid">
-          {[
-            ["±", "Wysoka", "dokładność"],
-            ["◇", "Niezawodność", "i długa żywotność"],
-            ["↕", "Wsparcie", "inżynierskie"],
-            ["⌘", "Industry 4.0", "i monitoring"],
-            ["◎", "Aplikacje", "high-tech"]
-          ].map(([icon, title, subtitle]) => (
-            <div className="metric" key={title}>
-              <strong>{icon} {title}</strong>
-              <span>{subtitle}</span>
-            </div>
-          ))}
+      <section className="value-strip">
+        <div className="container value-grid">
+          <div><b>◎</b><span><strong>Wysoka</strong> dokładność</span></div>
+          <div><b>◇</b><span><strong>Niezawodność</strong> i długa żywotność</span></div>
+          <div><b>↕</b><span><strong>Wsparcie</strong> inżynierskie</span></div>
+          <div><b>⌘</b><span><strong>Rozwiązania</strong> dla Industry 4.0</span></div>
+          <div><b>◌</b><span><strong>Aplikacje</strong> high-tech</span></div>
         </div>
       </section>
 
-      <main>
-        <section className="section" id="produkty">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <div className="kicker">Nasze produkty</div>
-                <h2>Kompletny system ruchu liniowego</h2>
-              </div>
-              <p className="muted">
-                Od standardowych prowadnic po precyzyjne stoły i monitoring predykcyjny.
-              </p>
+      <section className="section products-section" id="produkty">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <div className="eyebrow blue">NASZE PRODUKTY</div>
+              <h2>Kompletny system ruchu liniowego</h2>
             </div>
-
-            <div className="products">
-              {products.map(([number, title, description]) => (
-                <article className="card" key={title}>
-                  <div className="num">{number}</div>
-                  {number === "05" && (
-                    <img
-                      className="product-photo"
-                      src="https://www.nipponbearing.com/assets/images/products/slideway/slideway.jpg"
-                      alt="NB Slide Way – prowadnice wałeczkowo-krzyżowe"
-                    />
-                  )}
-                  <h3>{title}</h3>
-                  <p>{description}</p>
-                  <button className="text-link" onClick={openQuote}>Zapytaj o ofertę →</button>
-                </article>
-              ))}
-            </div>
+            <p>Precyzja w każdym detalu.</p>
           </div>
-        </section>
 
-        <section className="section dark" id="rozwiazania">
-          <div className="container">
-            <div className="section-head dark-head">
-              <div>
-                <div className="kicker">Rozwiązania</div>
-                <h2>Precyzyjny ruch. Jedna platforma technologiczna.</h2>
-              </div>
-              <p className="muted">
-                Dobór komponentów, wsparcie inżynierskie, modernizacja układów ruchu
-                i technologie monitoringu.
-              </p>
-            </div>
-
-            <div className="techgrid">
-              <article className="tech">
-                <div className="kicker">THK</div>
-                <h3>Linear Motion<br />for a Smarter World</h3>
-                <p>
-                  Prowadnice, śruby kulowe, stoły i elementy ruchu liniowego
-                  oraz OMNIedge™ — od komponentu do danych.
-                </p>
-                <div className="orb" />
-              </article>
-
-              <article className="tech" id="nb">
-                <div className="kicker">Nippon Bearing</div>
-                <h3>Precision Motion<br />for High-Tech</h3>
-                <p>
-                  Slide Way, stoły precyzyjne, prowadnice krzyżowo-wałeczkowe
-                  i tuleje liniowe dla wymagających aplikacji.
-                </p>
-                <div className="orb" />
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section className="section" id="thk">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <div className="kicker">Maintenance / Predictive Maintenance</div>
-                <h2>OMNIedge™ THK</h2>
-              </div>
-              <p className="muted">
-                Monitoring stanu prowadnic i wsparcie predykcyjnego utrzymania ruchu.
-              </p>
-            </div>
-
-            <div className="omni-card">
-              <div>
-                <div className="kicker">THK OMNIedge™</div>
-                <h3>Od komponentu do danych o stanie maszyny.</h3>
-                <p>
-                  Rozwiązanie dla zakładów, które chcą obserwować stan elementów
-                  ruchu i planować działania serwisowe na podstawie danych.
-                </p>
-                <button className="btn primary" onClick={openQuote}>Zapytaj o ofertę →</button>
-              </div>
-              <div className="omni-graphic">
-                <div className="omni-node">Sensor</div>
-                <div className="omni-arrow">→</div>
-                <div className="omni-node">Cloud</div>
-                <div className="omni-arrow">→</div>
-                <div className="omni-node">AI / KPI</div>
-                <div className="omni-arrow">→</div>
-                <div className="omni-node">Service</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="section" id="aplikacje">
-          <div className="container">
-            <div className="kicker">Aplikacje</div>
-            <h2>Technologie dla wymagających branż</h2>
-
-            <div className="appgrid">
-              {applications.map(([title, description]) => (
-                <div className="app" key={title}>
-                  <b>{title}</b>
-                  <p>{description}</p>
+          <div className="product-grid">
+            {products.map((p) => (
+              <article className="product-card" key={p.no}>
+                <div className={`product-image ${p.className || ""}`}>
+                  <img src={p.image} alt={p.name} />
                 </div>
-              ))}
-            </div>
+                <div className="product-body">
+                  <span className="product-no">{p.no}</span>
+                  <h3>{p.name}</h3>
+                  <b>{p.brand}</b>
+                  <p>{p.desc}</p>
+                  <button onClick={() => setQuoteOpen(true)}>Zapytaj o ofertę →</button>
+                </div>
+              </article>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="section contact-section" id="kontakt">
-          <div className="container">
-            <div className="cta">
-              <div>
-                <div className="kicker">B2B / Engineering</div>
-                <h2>Projektujesz maszynę?</h2>
-                <p>
-                  Wyślij symbol, parametry, rysunek lub opis aplikacji.
-                  Przygotujemy dobór i ofertę.
-                </p>
-              </div>
-              <button className="btn primary" onClick={openQuote}>
-                Zapytaj o ofertę →
-              </button>
+      <section className="section brand-section" id="rozwiazania">
+        <div className="container brand-grid">
+          <article className="brand-panel thk-panel" id="thk">
+            <div className="eyebrow">THK</div>
+            <h2>Linear Motion<br />for a Smarter World</h2>
+            <p>Prowadnice, śruby kulowe, stoły, elementy ruchu liniowego oraz OMNIedge™ – od komponentu do danych.</p>
+            <button onClick={() => setQuoteOpen(true)}>Zapytaj o rozwiązanie →</button>
+          </article>
+
+          <article className="brand-panel nb-panel" id="nb">
+            <div className="eyebrow">NIPPON BEARING (NB)</div>
+            <h2>Precision Motion<br />for High-Tech</h2>
+            <p>Slide Way, stoły precyzyjne, prowadnice krzyżowo-wałeczkowe i tuleje liniowe dla wymagających aplikacji.</p>
+            <button onClick={() => setQuoteOpen(true)}>Zapytaj o rozwiązanie →</button>
+          </article>
+        </div>
+      </section>
+
+      <section className="section omni-section" id="wsparcie">
+        <div className="container omni-grid">
+          <div>
+            <div className="eyebrow blue">THK OMNIedge™</div>
+            <h2>Przejdź od utrzymania reaktywnego do predykcyjnego.</h2>
+            <p>
+              OMNIedge pozwala monitorować stan elementów ruchu liniowego,
+              wizualizować dane i wykrywać oznaki problemów przed awarią.
+            </p>
+            <ul>
+              <li>Monitoring prowadnic liniowych i śrub kulowych</li>
+              <li>Ocena stanu smarowania i uszkodzeń</li>
+              <li>Predykcyjne utrzymanie ruchu</li>
+              <li>Możliwość retrofit na istniejących maszynach</li>
+            </ul>
+            <button className="btn primary" onClick={() => setQuoteOpen(true)}>Zapytaj o OMNIedge →</button>
+          </div>
+
+          <div className="omni-card">
+            <img src="/hero.png" alt="THK OMNIedge" />
+            <div className="omni-screen">
+              <b>OMNIedge™</b>
+              <span>CONDITION MONITORING</span>
+              <div className="mini-wave">╱╲╱╲╱╲╱╲</div>
+              <strong>ONLINE</strong>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      <section className="section applications-section" id="aplikacje">
+        <div className="container">
+          <div className="eyebrow blue">APLIKACJE</div>
+          <div className="section-heading compact">
+            <h2>Technologie dla wymagających branż</h2>
+            <span>Wiele zastosowań →</span>
+          </div>
+
+          <div className="application-grid">
+            {applications.map(([title, text]) => (
+              <article className="application-card" key={title}>
+                <div className="application-photo" />
+                <div>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section contact-section" id="kontakt">
+        <div className="container contact-box">
+          <div>
+            <div className="eyebrow">B2B / ENGINEERING</div>
+            <h2>Projektujesz maszynę?</h2>
+            <p>Wyślij symbol, parametry, rysunek lub opis aplikacji. Przygotujemy odpowiedź techniczno-handlową.</p>
+          </div>
+          <button className="btn primary" onClick={() => setQuoteOpen(true)}>Zapytaj o ofertę →</button>
+        </div>
+      </section>
 
       <footer className="footer">
         <div className="container footer-grid">
           <div>
-            <div className="brand">
-              GRAMO
-              <small>MOTION FOR A BETTER TOMORROW</small>
-            </div>
+            <div className="logo">GRAMO<small>MOTION FOR A BETTER TOMORROW</small></div>
             <p>Precision Motion Technology<br />THK × Nippon Bearing</p>
           </div>
-
           <div>
             <h4>Produkty</h4>
-            <a href="#produkty">OMNIedge™</a>
-            <a href="#produkty">Prowadnice</a>
+            <a href="#produkty">Prowadnice liniowe</a>
             <a href="#produkty">Śruby kulowe</a>
             <a href="#produkty">Stoły precyzyjne</a>
+            <a href="#produkty">Slide Way</a>
+            <a href="#produkty">Tuleje liniowe</a>
           </div>
-
           <div>
             <h4>Rozwiązania</h4>
-            <a href="#rozwiazania">Automatyka</a>
-            <a href="#aplikacje">Fotonika</a>
-            <a href="#aplikacje">Medical</a>
-            <a href="#aplikacje">Deep Tech</a>
+            <a href="#thk">THK</a>
+            <a href="#nb">Nippon Bearing</a>
+            <a href="#wsparcie">OMNIedge™</a>
+            <a href="#aplikacje">Aplikacje</a>
           </div>
-
           <div>
             <h4>Kontakt</h4>
             <a href="mailto:biuro@gramo.com.pl">biuro@gramo.com.pl</a>
             <a href="tel:+48609007076">+48 609 007 076</a>
-            <button className="footer-link-button" onClick={openQuote}>Zapytanie ofertowe</button>
+            <span>ul. Energetyki 11<br />41-908 Bytom</span>
           </div>
         </div>
-
         <div className="container footer-bottom">
-          <span>GRAMO • Bytom • Polska</span>
-          <span>THK × Nippon Bearing</span>
+          <span>© GRAMO Motion Systems</span>
+          <button onClick={() => setQuoteOpen(true)}>Zapytaj o ofertę →</button>
         </div>
       </footer>
 
       {quoteOpen && <QuoteModal onClose={() => setQuoteOpen(false)} />}
-    </>
+    </div>
   );
 }
 
