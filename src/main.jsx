@@ -278,15 +278,31 @@ function App() {
           </div>
 
           <div className="application-grid">
-            {applications.map(([title, text]) => (
-              <article className="application-card" key={title}>
-                <div className="application-photo" />
-                <div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </div>
-              </article>
-            ))}
+            {applications.map(([title, text], index) => {
+  const images = [
+    "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1517976547714-720226b864c1?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=900&q=80"
+  ];
+
+  return (
+    <article className="application-card" key={title}>
+      <div
+        className="application-photo"
+        style={{ backgroundImage: `url(${images[index]})` }}
+      />
+      <div>
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </div>
+    </article>
+  );
+})}
           </div>
         </div>
       </section>
